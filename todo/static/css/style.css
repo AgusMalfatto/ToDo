@@ -1,0 +1,150 @@
+/* Estilos generales */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+nav {
+  background-color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+nav h1 {
+  margin: 0;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin-left: 10px;
+}
+
+nav ul li:first-child {
+  margin-left: 0;
+}
+
+.content {
+  margin: 20px;
+}
+
+.flash {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #e2e2e2;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos específicos para index.html */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.action {
+  background-color: #1e88e5;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.todo {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  display: flexbox;
+}
+
+ul {
+  list-style: none;
+}
+
+.todo h1 {
+  margin: 0;
+}
+
+.todo .about {
+  font-size: 0.8rem;
+  color: #888;
+  margin: .5rem;
+  display: flexbox;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #ccc;
+  margin: 20px 0;
+}
+
+/* Estilos específicos para create.html y update.html */
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+form input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+form input[type="submit"] {
+  background-color: #1e88e5;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100px;
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  transition: .5s;
+}
+
+form input[type="submit"]:hover {
+  background-color: #104675;
+}

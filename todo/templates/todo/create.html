@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}New ToDo{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        <label for="title">Title</label>
+        <input name="title" id="title">
+        <br><br>
+        <label for="description">Description</label>
+        <input name="description" id="description">
+        <br><br>
+        <label for="priority">Priority</label>
+        <select name="priority" id="">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <br><br>
+        <label for="date">Due Date:</label>
+        <input type="date" id="date" name="date">
+        <br><br>
+        <input type="submit" value="Save">
+    </form>
+
+    <script>
+        // Obtener el campo de entrada de fecha
+        var fechaInput = document.getElementById("date");
+      
+        // Obtener la fecha actual
+        var fechaActual = new Date().toISOString().split("T")[0];
+      
+        // Establecer la fecha mínima en el campo de entrada
+        fechaInput.min = fechaActual;
+      
+        // Escuchar el evento de cambio en el campo de entrada
+        fechaInput.addEventListener("change", function() {
+          var seleccion = new Date(fechaInput.value);
+          var actual = new Date(fechaActual);
+      
+          // Verificar si la fecha seleccionada es anterior a la fecha actual
+          if (seleccion < actual) {
+            // Restablecer la fecha seleccionada a la fecha actual
+            fechaInput.value = fechaActual;
+          }
+        });
+    </script>
+{% endblock %}
