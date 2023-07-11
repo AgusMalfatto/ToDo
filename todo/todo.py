@@ -12,7 +12,7 @@ bp = Blueprint('todo', __name__)
 def index():
     db, c = get_db()
     c.execute(
-        'select t.id, t.description, u.username, t.completed, t.created_at from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by created_at desc', (g.user['id'],)
+        'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by created_at desc', (g.user['id'],)
     )
     todos = c.fetchall()
 
@@ -25,12 +25,12 @@ def create():
         title = request.form['title']
         description = request.form['description']
         priority = request.form.get('priority')
-        date = request.form.get('date')
+        dueDate = request.form.get('date')
         error = None
         print(title)
         print(description)
         print(priority)
-        print(date)
+        print(dueDate)
 
         if not description:
             error = 'Description is required'
@@ -39,11 +39,7 @@ def create():
             flash(error)    
         else:
             db, c = get_db()
-            c.execute(
-                'insert into todo (description, completed, created_by)'
-                ' values (%s, %s, %s)',
-                (description, False, g.user['id'])
-            )
+            c.execute('insert into todo (description, completed, created_by, priority, due_date) values (%s, %s, %s, %s, %s)', (description, False, g.user['id'], priority, dueDate))
             db.commit()
             return redirect(url_for('todo.index'))
 

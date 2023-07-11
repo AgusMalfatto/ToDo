@@ -17,6 +17,8 @@ instructions = [
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             description TEXT NOT NULL,
             completed BOOLEAN NOT NULL,
+            priotity TEXT NOT NULL,
+            due_date DATE NOT NULL,
             FOREIGN KEY (created_by) REFERENCES user (id)
     )
     """
