@@ -22,15 +22,10 @@ def index():
 @login_required
 def create():
     if request.method == 'POST':
-        title = request.form['title']
         description = request.form['description']
         priority = request.form.get('priority')
         dueDate = request.form.get('date')
         error = None
-        print(title)
-        print(description)
-        print(priority)
-        print(dueDate)
 
         if not description:
             error = 'Description is required'
@@ -89,3 +84,21 @@ def delete(id):
     c.execute('delete from todo where id = %s and created_by = %s', (id, g.user['id']))
     db.commit()
     return redirect(url_for('todo.index'))
+
+@bp.route('/ordenar', methods=['POST'])
+def ordenar():
+    ordenamiento = request.form.get('ordenamiento')
+    db, c = get_db()
+
+    if ordenamiento == "HP":
+        c.execute(
+            'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by created_at desc', (g.user['id'],)
+        )
+        
+    elif ordenamiento == "LP":
+        c.execute(
+            'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by due_date desc', (g.user['id'],)
+        )
+        
+    todos = c.fetchall()
+    return render_template('todo/index.html', todos=todos)

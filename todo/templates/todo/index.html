@@ -3,8 +3,16 @@
 {% block header %}
 <h1>{% block title %}ToDos{% endblock %}</h1>
   {% if g.user %}
+  <form action="/ordenar" method="post">
+    <select name="ordenamiento">
+      <option value="HP">Mayor Prioridad</option>
+      <option value="LP">Menor Prioridad</option>
+    </select>
+    <button type="submit">Ordenar</button>
+  </form>
     <a class="action" href="{{ url_for('todo.create') }}">Create</a>
-  {% endif %}
+    <br>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -20,6 +28,8 @@
         {% endif %}
       </h1>
       <div class="about">{{ todo['created_at'].strftime('%Y-%m-%d') }}</div>
+      <div class="about">Priority: {{ todo['priority'] }}</div>
+      <div class="about">Due Date: {{ todo['due_date'] }}</div>
       <a class="action" href="{{ url_for('todo.update', id=todo['id']) }}">Edit</a>
     </div>
   </li>
