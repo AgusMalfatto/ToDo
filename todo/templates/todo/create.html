@@ -23,17 +23,10 @@
     </form>
 
     <script>
-        // Obtener el campo de entrada de fecha
-        var fechaInput = document.getElementById("date");
-      
-        // Obtener la fecha actual
+        var fechaInput = document.getElementById("date");      
         var fechaActual = new Date();
-
-        // Establecer la fecha mínima en el campo de entrada
         fechaInput.min = fechaActual.toISOString().split("T")[0];
-
         var fechaPredeterminada = new Date(fechaActual.setDate(fechaActual.getDate() + 7)).toISOString().split("T")[0];
-
         // Establecer la fecha predeterminada
         fechaInput.value = fechaPredeterminada;
       

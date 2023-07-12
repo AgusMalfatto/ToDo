@@ -12,7 +12,8 @@ bp = Blueprint('todo', __name__)
 def index():
     db, c = get_db()
     c.execute(
-        'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by created_at desc', (g.user['id'],)
+        'SELECT t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date FROM todo t JOIN user u ON t.created_by = u.id WHERE t.created_by = %s ORDER BY created_at DESC',
+        (g.user['id'],)
     )
     todos = c.fetchall()
 
@@ -43,7 +44,7 @@ def create():
 def get_todo(id):
     db, c = get_db()
     c.execute(
-        'select t.id, t.description, t.completed, t.created_by, t.created_at, u.username' 
+        'select t.id, t.description, t.completed, t.created_by, t.created_at, t.priority, t.due_date, u.username' 
         ' from todo t join user u on t.created_by = u.id where t.id = %s',
         (id,)
     )
@@ -59,10 +60,13 @@ def get_todo(id):
 @login_required
 def update(id):
     todo = get_todo(id)
+    print(todo)
 
     if request.method == 'POST':
         description = request.form['description']
         completed = True if request.form.get('completed') == 'on' else False
+        priority = request.form['priority']
+        dueDate = request.form['date']
         error = None
 
         if not description:
@@ -72,7 +76,7 @@ def update(id):
             flash(error)
         else:
             db, c = get_db()
-            c.execute('update todo set description = %s, completed = %s where id = %s and created_by = %s', (description,  completed, id, g.user['id']))
+            c.execute('update todo set description = %s, completed = %s, priority = %s, due_date = %s where id = %s and created_by = %s', (description,  completed, priority, dueDate, id, g.user['id']))
             db.commit()
             return redirect(url_for('todo.index'))
     return render_template('todo/update.html', todo=todo)
@@ -88,7 +92,6 @@ def delete(id):
 @bp.route('/ordenar', methods=['POST'])
 def ordenar():
     ordenamiento = request.form.get('ordenamiento')
-    db, c = get_db()
     high = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'High' order by due_date desc)" 
 
     medium = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'Medium' order by due_date desc)"
@@ -96,10 +99,17 @@ def ordenar():
     low = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'Low' order by due_date desc)"
 
     if ordenamiento == "HP":
-        c.execute(high + "UNION ALL" + medium + "UNION ALL" + low)
-        
-    elif ordenamiento == "LP":
-        c.execute(low + "UNION ALL" + medium + "UNION ALL" + high)
-        
+        query = f"{high} UNION ALL {medium} UNION ALL {low}"
+        return redirect(url_for('todo.order', query = query))
+    
+    query = f"{low} UNION ALL {medium} UNION ALL {high}"
+    return redirect(url_for('todo.order', query = query))
+
+@bp.route('/order/<query>')
+def order(query):
+    db, c = get_db()
+    c.execute(query)
     todos = c.fetchall()
+
     return render_template('todo/index.html', todos=todos)
+

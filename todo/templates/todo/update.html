@@ -8,12 +8,47 @@
   <form method="POST">
     <label for="descritpion">Description</label>
     <input name="description" id="description" value="{{ request.form['description'] or todo['description'] }}" required>
+    <br><br>
     <label for="completed">Completed</label>
     <input type="checkbox" name="completed" id="completed" {% if todo['completed'] == 1 %}checked{% endif %}>
+    <br><br>
+    <label for="priority">Priority</label>
+    <select name="priority" id="priority">
+        <option {% if todo['priority'] == 'Low' %} selected {% endif %} value="Low">Low</option>
+        <option {% if todo['priority'] == 'Medium' %} selected {% endif %} value="Medium">Medium</option>
+        <option {% if todo['priority'] == 'High' %} selected {% endif %} value="High">High</option>
+    </select>
+    <br><br>
+    <label for="date">Due Date:</label>
+    <input type="date" value={{ todo['due_date'] }} id="date" name="date">
+    <br><br>
     <input type="submit" value="Save">
   </form>  
   <form action="{{ url_for('todo.delete', id=todo['id']) }}" method="POST">
-    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?')">
+    <input style="background-color: #ff0000" class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?')">
   </form>
+
+  <script>
+    // Obtener el campo de entrada de fecha
+    var fechaInput = document.getElementById("date");
+  
+    // Obtener la fecha actual
+    var fechaActual = new Date();
+
+    // Establecer la fecha mínima en el campo de entrada
+    fechaInput.min = fechaActual.toISOString().split("T")[0];
+  
+    // Escuchar el evento de cambio en el campo de entrada
+    fechaInput.addEventListener("change", function() {
+      var seleccion = new Date(fechaInput.value);
+      var actual = fechaActual.toISOString().split("T")[0];
+  
+      // Verificar si la fecha seleccionada es anterior a la fecha actual
+      if (seleccion < actual) {
+        // Restablecer la fecha seleccionada a la fecha actual
+        fechaInput.value = fechaActual;
+      }
+    });
+</script>
 
 {% endblock %}
