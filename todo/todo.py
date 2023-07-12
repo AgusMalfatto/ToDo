@@ -89,16 +89,17 @@ def delete(id):
 def ordenar():
     ordenamiento = request.form.get('ordenamiento')
     db, c = get_db()
+    high = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'High' order by due_date desc)" 
+
+    medium = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'Medium' order by due_date desc)"
+
+    low = f"(select t.id, t.description, u.username, t.completed, t.created_at, t.priority, t.due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = {g.user['id']} and t.priority = 'Low' order by due_date desc)"
 
     if ordenamiento == "HP":
-        c.execute(
-            'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by created_at desc', (g.user['id'],)
-        )
+        c.execute(high + "UNION ALL" + medium + "UNION ALL" + low)
         
     elif ordenamiento == "LP":
-        c.execute(
-            'select t.id, t.description, u.username, t.completed, t.created_at, priority, due_date from todo t JOIN user u on t.created_by = u.id where t.created_by = %s order by due_date desc', (g.user['id'],)
-        )
+        c.execute(low + "UNION ALL" + medium + "UNION ALL" + high)
         
     todos = c.fetchall()
     return render_template('todo/index.html', todos=todos)
